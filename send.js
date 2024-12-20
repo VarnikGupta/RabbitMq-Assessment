@@ -2,8 +2,7 @@ const rabbit = require("foo-foo-mq");
 const { configure } = require("./config");
 
 async function publishMessages(args) {
-  console.log("publish main");
-  const { text, routingKey, exchange } = args;
+  const { text, routingKey, exchange, id } = args;
 
   try {
     await rabbit.publish(exchange, {
@@ -12,12 +11,12 @@ async function publishMessages(args) {
     });
 
     console.log(
-      `Message sent successfully to exchange "${exchange}" with key "${routingKey}":`,
+      `Message ${id} sent successfully to exchange "${exchange}" with key "${routingKey}":`,
       text
     );
   } catch (error) {
     console.error(
-      `Error publishing message to exchange "${exchange}" with key "${routingKey}":`,
+      `Error publishing message ${id} to exchange "${exchange}" with key "${routingKey}":`,
       error.message
     );
   }

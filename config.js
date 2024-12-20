@@ -1,58 +1,58 @@
 const rabbit = require("foo-foo-mq");
-const { limit, queueLimit, retryDelay } = require("./constants");
+const { limit, queueLimit, retryDelay, port, mainExchange1, mainExchange2, retryExchange, deadLetterExchange, mainQueue1, mainQueue2, retryQueue1, retryQueue2, deadLetterQueue } = require("./constants");
 
 const settings = {
   connection: {
     user: "guest",
     pass: "compro",
     host: "localhost",
-    port: 5672,
+    port: port,
     timeout: 2000,
     vhost: "%2f",
   },
   exchanges: [
-    { name: "main.e1", type: "direct" },
-    { name: "main.e2", type: "topic" },
-    { name: "retry.e1", type: "direct" },
-    { name: "dead-letter.e1", type: "fanout" },
+    { name: mainExchange1, type: "direct" },
+    { name: mainExchange2, type: "topic" },
+    { name: retryExchange, type: "direct" },
+    { name: deadLetterExchange, type: "fanout" },
   ],
   queues: [
     {
-      name: "main.q1",
+      name: mainQueue1,
       limit: limit,
       queueLimit: queueLimit,
-      deadLetter: "dead-letter.e1",
+      deadLetter: deadLetterExchange,
     },
     {
-      name: "main.q2",
+      name: mainQueue2,
       limit: limit,
       queueLimit: queueLimit,
-      deadLetter: "dead-letter.e1",
+      deadLetter: deadLetterExchange,
     },
     {
-      name: "retry.q1",
+      name: retryQueue1,
       limit: limit,
       queueLimit: queueLimit,
       messageTtl: retryDelay,
-      deadLetter: "main.e1",
+      deadLetter: mainExchange1,
     },
     {
-      name: "retry.q2",
+      name: retryQueue2,
       limit: limit,
       queueLimit: queueLimit,
       messageTtl: retryDelay,
-      deadLetter: "main.e2",
+      deadLetter: mainExchange2,
     },
-    { name: "dead-letter.q1" },
+    { name: deadLetterQueue },
   ],
   bindings: [
-    { exchange: "main.e1", target: "main.q1", keys: ["test1"] },
-    { exchange: "main.e1", target: "main.q2", keys: ["test2"] },
-    { exchange: "main.e2", target: "main.q1", keys: ["test1"] },
-    { exchange: "main.e2", target: "main.q2", keys: ["test2"] },
-    { exchange: "retry.e1", target: "retry.q1", keys: ["test1"] },
-    { exchange: "retry.e1", target: "retry.q2", keys: ["test2"] },
-    { exchange: "dead-letter.e1", target: "dead-letter.q1" },
+    { exchange: mainExchange1, target: mainQueue1, keys: ["test1"] },
+    { exchange: mainExchange1, target: mainQueue2, keys: ["test2"] },
+    { exchange: mainExchange2, target: mainQueue1, keys: ["test1"] },
+    { exchange: mainExchange2, target: mainQueue2, keys: ["test2"] },
+    { exchange: retryExchange, target: retryQueue1, keys: ["test1"] },
+    { exchange: retryExchange, target: retryQueue1, keys: ["test2"] },
+    { exchange: deadLetterExchange, target: deadLetterQueue },
   ],
 };
 

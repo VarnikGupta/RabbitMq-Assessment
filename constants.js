@@ -1,6 +1,16 @@
 module.exports = {
+  port: 5672,
   limit: 100,
   queueLimit: 1000,
   retryDelay: 10000,
-  maxRetries: 5
+  maxRetries: 5,
+  mainExchange1: "main.e1",
+  mainExchange2: "main.e2",
+  retryExchange: "retry.e1",
+  deadLetterExchange: "dead-letter.e1",
+  mainQueue1: "main.q1",
+  mainQueue2: "main.q2",
+  retryQueue1: "retry.q1",
+  retryQueue2: "retry.q2",
+  deadLetterQueue: "dead-letter.q1",
 };
